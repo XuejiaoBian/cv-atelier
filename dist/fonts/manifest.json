@@ -1,0 +1,72 @@
+[
+  {
+    "family": "Noto Sans SC",
+    "style": "normal",
+    "weight": "100 900",
+    "file": "notosanssc.ttf",
+    "license": "notosanssc-OFL.txt"
+  },
+  {
+    "family": "Noto Sans TC",
+    "style": "normal",
+    "weight": "100 900",
+    "file": "notosanstc.ttf",
+    "license": "notosanstc-OFL.txt"
+  },
+  {
+    "family": "Noto Sans JP",
+    "style": "normal",
+    "weight": "100 900",
+    "file": "notosansjp.ttf",
+    "license": "notosansjp-OFL.txt"
+  },
+  {
+    "family": "Noto Sans KR",
+    "style": "normal",
+    "weight": "100 900",
+    "file": "notosanskr.ttf",
+    "license": "notosanskr-OFL.txt"
+  },
+  {
+    "family": "Inter",
+    "style": "normal",
+    "weight": "100 900",
+    "file": "inter.ttf",
+    "license": "inter-OFL.txt"
+  },
+  {
+    "family": "Inter",
+    "style": "italic",
+    "weight": "100 900",
+    "file": "inter-italic.ttf",
+    "license": "inter-OFL.txt"
+  },
+  {
+    "family": "Source Sans 3",
+    "style": "normal",
+    "weight": "200 900",
+    "file": "sourcesans3.ttf",
+    "license": "sourcesans3-OFL.txt"
+  },
+  {
+    "family": "Source Sans 3",
+    "style": "italic",
+    "weight": "200 900",
+    "file": "sourcesans3-italic.ttf",
+    "license": "sourcesans3-OFL.txt"
+  },
+  {
+    "family": "IBM Plex Sans",
+    "style": "normal",
+    "weight": "100 700",
+    "file": "ibmplexsans.ttf",
+    "license": "ibmplexsans-OFL.txt"
+  },
+  {
+    "family": "IBM Plex Sans",
+    "style": "italic",
+    "weight": "100 700",
+    "file": "ibmplexsans-italic.ttf",
+    "license": "ibmplexsans-OFL.txt"
+  }
+]

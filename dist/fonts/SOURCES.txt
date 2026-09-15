@@ -1,0 +1,9 @@
+Unmodified variable TrueType fonts from https://github.com/google/fonts/tree/main/ofl/
+Retrieved 2026-09-15. Each family is distributed with its original SIL Open Font License.
+https://github.com/google/fonts/tree/main/ofl/ibmplexsans
+https://github.com/google/fonts/tree/main/ofl/inter
+https://github.com/google/fonts/tree/main/ofl/notosansjp
+https://github.com/google/fonts/tree/main/ofl/notosanskr
+https://github.com/google/fonts/tree/main/ofl/notosanssc
+https://github.com/google/fonts/tree/main/ofl/notosanstc
+https://github.com/google/fonts/tree/main/ofl/sourcesans3
