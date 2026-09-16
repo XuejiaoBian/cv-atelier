@@ -1,15 +1,23 @@
 'use strict';
 const $ = id => document.getElementById(id);
 const frame = $('editor'), C = window.CVCore, MM = 96 / 25.4;
-const defaultCSS=`#cv-content{color:#344238;font-size:10pt;line-height:1.55}#cv-content h1{font-size:32pt;line-height:1.2;font-weight:600;letter-spacing:-1.4px;margin:0 0 7px;color:#263f35}#cv-content .cn-name{font-size:19pt;font-weight:400;letter-spacing:2px;color:#75816e;margin-left:13px}#cv-content .role{font-size:11pt;color:#6a7e5e;letter-spacing:.3px;margin:0 0 17px}#cv-content .contact{font-size:8pt;line-height:1.8;color:#849078;border-bottom:1px solid #cbd5c3;padding-bottom:22px;margin-bottom:0}#cv-content h2{font-size:9pt;font-weight:600;letter-spacing:1.8px;color:#6d845b;text-transform:uppercase;margin:0 0 12px;display:flex;align-items:center;gap:13px}#cv-content h2:after{content:'';height:1px;background:#e0e6d9;flex:1}#cv-content h2 span{font-size:8pt;font-weight:400;letter-spacing:1px;color:#92a183}#cv-content h3{font-size:10.5pt;font-weight:600;margin:0 0 4px;color:#34472e}#cv-content p{margin:5px 0 9px}#cv-content .date{float:right;font-size:8pt;color:#8b987d;font-weight:400}#cv-content .company{font-size:9pt;color:#7b8e69;margin:0 0 8px}#cv-content ul{padding-left:16px;margin:8px 0 16px}#cv-content li{padding-left:3px;margin:5px 0}#cv-content .skills{display:grid;grid-template-columns:95px 1fr;gap:7px 16px;font-size:9pt}#cv-content .skills b{font-weight:500;color:#607b4f}#cv-content .end-note{font-size:8pt;color:#96a587;margin-top:15px}`;
-const sample=`<section><h1>Alex Chen <span class="cn-name">陈安然</span></h1><p class="role">Product Designer · 产品设计师</p><p class="contact">San Francisco, CA &nbsp; / &nbsp; alex.chen@example.com &nbsp; / &nbsp; portfolio.example.com</p></section>
-<section><h2>Profile <span>个人简介</span></h2><p>Thoughtful product designer connecting complex systems with everyday human needs. Six years of turning ambiguity into clear, useful experiences for global audiences.</p><p>以人为本，以细节见长。擅长跨文化协作，将复杂问题转化为简洁、自然的数字体验。</p></section>
-<section><h2>Experience <span>工作经历</span></h2><h3>Senior Product Designer <span class="date">2022 — Present</span></h3><p class="company">Forma Studio · San Francisco</p><ul><li>Led the redesign of a collaborative workspace used by 40,000+ teams, increasing activation by 28%.</li><li>Built a bilingual design system spanning 60+ components across web and mobile.</li><li>Partnered with research and engineering to bring three products from concept to launch.</li></ul><h3>Product Designer <span class="date">2019 — 2022</span></h3><p class="company">Fieldwork · Shanghai 上海</p><ul><li>Designed end-to-end experiences for a growing creative community of 120,000 members.</li><li>将用户研究融入产品迭代，优化核心流程，使任务完成率提升 35%。</li></ul></section>
-<section><h2>Education <span>教育背景</span></h2><h3>BFA, Communication Design <span class="date">2015 — 2019</span></h3><p class="company">California College of the Arts</p><p>Focus on interaction design, visual systems, and cross-cultural communication.</p></section>
-<section><h2>Selected skills <span>专业技能</span></h2><div class="skills"><b>Design</b><span>Product strategy · Interaction design · Design systems</span><b>Tools</b><span>Figma · Framer · HTML / CSS</span><b>Languages</b><span>English (fluent) · 中文（母语）</span></div></section>`;
-const defaults = () => ({mt:18,mb:18,ml:20,mr:20,line:1.5,gap:18,cjk:true,columns:1,font:'sans',size:11,cjkFace:'sc'});
+const defaultCSS=`
+#cv-content{color:#273744}#cv-content h1{font-size:27pt;line-height:1.1;font-weight:650;letter-spacing:-.7px;margin:0 0 6px;color:#1d3545}#cv-content h1 small{font-size:13pt;font-weight:450;letter-spacing:0;color:#637888}#cv-content .role{font-size:10.5pt;color:#416777;font-weight:600;margin:0 0 7px}#cv-content .contact{font-size:8.5pt;color:#687b85;border-bottom:1.5pt solid #274e60;padding-bottom:12px;margin:0}#cv-content .contact a{color:inherit;text-decoration:none}#cv-content h2{font-size:9pt;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:#2b5768;margin:0 0 7px;border-bottom:.6pt solid #d1dce1;padding-bottom:4px}#cv-content h2 span{font-weight:400;letter-spacing:0;color:#7d8f98;margin-left:6px}#cv-content h3{font-size:10.5pt;font-weight:650;margin:0 0 2px;color:#233d4a}#cv-content .date{float:right;font-size:8.5pt;font-weight:400;color:#6b7e87}#cv-content .company{font-size:9pt;color:#587580;margin:0 0 4px}#cv-content p{margin:0 0 5px}#cv-content ul{padding-left:15px;margin:4px 0 9px}#cv-content li{padding-left:2px;margin:3px 0}#cv-content li::marker{color:#466c7e}#cv-content .credential{margin-bottom:7px}#cv-content .credential:last-child{margin-bottom:0}#cv-content .skills p{margin-bottom:4px}#cv-content .skills strong{font-weight:600;color:#2a5364}#cv-content .job{margin-bottom:10px}#cv-content .job:last-child{margin-bottom:0}#cv-content .job:last-child ul{margin-bottom:0}
+`;
+// Fictional example: not the user's qualifications or employment history.
+const sample=`
+<section><h1>Mei Lin <small>MBBS, DPhil · 林玫</small></h1><p class="role">Physician–Scientist | Clinical Development & Translational Medicine</p><p class="contact">Cambridge, UK · Open to global opportunities &nbsp; | &nbsp; <a href="mailto:mei.lin@example.com">mei.lin@example.com</a> &nbsp; | &nbsp; <a href="https://example.com/mei-lin">Professional profile ↗</a></p></section>
+<section><h2>Professional profile <span>专业概述</span></h2><p>Physician–scientist with six years across patient care, translational oncology, and early clinical development. Combines medical judgment with biomarker strategy and quantitative evidence to advance targeted therapies. Experienced in Phase I/II study design, safety review, and investigator engagement; seeking a clinical development or medical affairs role in biopharma.</p></section>
+<section><h2>Clinical & industry experience <span>工作经历</span></h2>
+<article class="job"><h3>Senior Clinical Scientist, Oncology <span class="date">2024–Present</span></h3><p class="company">Arcwell Therapeutics · Cambridge, UK</p><ul><li>Co-developed a Phase II protocol, eligibility criteria, and biomarker plan for a targeted therapy program spanning 18 sites in four countries.</li><li>Integrated clinical, safety, and pharmacodynamic evidence into dose-expansion recommendations for a cross-functional governance team.</li><li>Established a medical data-review workflow with clinical operations and biostatistics, reducing median query-resolution time from 12 to 7 days.</li></ul></article>
+<article class="job"><h3>Clinical Scientist, Translational Medicine <span class="date">2022–2024</span></h3><p class="company">Northbridge Biopharma · London, UK</p><ul><li>Designed a biomarker analysis plan for a 240-patient oncology study, linking tissue and circulating-DNA findings to clinical outcomes.</li><li>Authored clinical study report sections and investigator materials; partnered with regulatory, safety, and medical writing colleagues.</li><li>Delivered scientific training to 35 study-team members and synthesized investigator feedback into protocol amendments.</li></ul></article>
+<article class="job"><h3>Clinical Research Fellow <span class="date">2020–2022</span></h3><p class="company">Cambridge University Hospitals · Cambridge, UK</p><ul><li>Combined supervised clinical care with prospective research; coordinated consent, eligibility review, and follow-up for a 120-participant cohort.</li><li>Led an interdisciplinary analysis of treatment-response predictors and mentored two junior researchers in reproducible data analysis.</li></ul></article></section>
+<section><h2>Medical education <span>医学教育</span></h2><div class="credential"><h3>DPhil, Oncology <span class="date">2016–2020</span></h3><p>University of Oxford · Competitive doctoral scholarship. Research in tumor–immune interactions and translational biomarkers.</p></div><div class="credential"><h3>MBBS, Medicine — Distinction <span class="date">2010–2016</span></h3><p>University College London · Clinical medicine, pharmacology, and evidence-based practice; distinction in final examinations.</p></div></section>
+<section><h2>Research & scientific contribution <span>科研成果</span></h2><ul><li>Nine peer-reviewed publications, including three first-author papers; research spanning oncology biomarkers and clinical outcomes.</li><li>Presented translational findings at international oncology meetings and contributed to two multidisciplinary grant proposals.</li><li>Built documented R analysis workflows for survival analysis, cohort characterization, and publication-quality figures.</li></ul></section>
+<section class="skills"><h2>Expertise & credentials <span>专业技能</span></h2><p><strong>Clinical development:</strong> Phase I/II protocols · Medical data review · Benefit–risk assessment · Investigator engagement</p><p><strong>Translational science:</strong> Biomarker strategy · Oncology · Clinical evidence synthesis · Scientific communication</p><p><strong>Methods & training:</strong> R · Survival analysis · Good Clinical Practice training · Research ethics</p><p><strong>Languages:</strong> English, fluent · Mandarin Chinese, native（中文母语）</p></section>`;
+const defaults = () => ({mt:18,mb:18,ml:20,mr:20,line:1.5,gap:18,cjk:true,font:'sans',size:11,cjkFace:'sc'});
 const cjkNames = {sc:'Noto Sans SC',tc:'Noto Sans TC',jp:'Noto Sans JP',kr:'Noto Sans KR'};
-let settings = defaults(), zoom=.85, range=null, toolbarRange=null, mode='text';
+let settings = {...defaults(),mt:15,mb:15,ml:17,mr:17,line:1.35,gap:12,font:'source',size:10.5}, zoom=.85, range=null, toolbarRange=null, mode='text';
 let history=[], historyIndex=-1, dirty=false, selected=-1, dragIndex=-1, saveTimer, activeDrag=null;
 let fontManifest=[], fontCache=new Map(), licenseCache=new Map(), linkRange=null, linkTargets=[];
 let observedRoot=null, selectionTick=null, loadingFonts=0;
@@ -29,9 +37,10 @@ function fontStyles() {
 }
 function pageCSS() {
   return `html,body{margin:0!important;padding:0!important;background:white!important}#cv-page{box-sizing:border-box!important;width:210mm!important;min-height:297mm;padding:${settings.mt}mm ${settings.mr}mm ${settings.mb}mm ${settings.ml}mm!important;margin:0!important;background:white;position:relative}
-#cv-content{outline:none!important;min-height:20px;font-family:${family(settings.font)};font-size:${settings.size}pt;line-height:${settings.line};line-break:${settings.cjk?'strict':'auto'};overflow-wrap:break-word;word-break:normal;column-gap:9mm;column-count:${settings.columns}}
-#cv-content [data-atelier-page-wrapper]{width:100%!important;max-width:none!important;min-width:0!important;height:auto!important;min-height:0!important;max-height:none!important;padding:0!important;margin:0!important;overflow:visible!important;box-shadow:none!important;column-count:${settings.columns}}
-#cv-content:has(>[data-atelier-page-wrapper]){column-count:1}#cv-content section{margin-bottom:${settings.gap}pt;break-inside:avoid}#cv-content section:last-child{margin-bottom:0}#cv-content h1,#cv-content h2,#cv-content h3{break-after:avoid}#cv-content p,#cv-content li{orphans:2;widows:2}#cv-content img{max-width:100%;height:auto}#cv-content a{cursor:text}#cv-content[data-editor-mode="layout"]{user-select:none;cursor:move}#cv-content[data-editor-mode="layout"] *{cursor:move!important}#cv-content [data-active-section]{outline:1px dashed #a5bb97;outline-offset:5px}
+#cv-content{outline:none!important;min-height:20px;font-family:${family(settings.font)};font-size:${settings.size}pt;line-height:${settings.line};line-break:${settings.cjk?'strict':'auto'};overflow-wrap:break-word;word-break:normal;column-gap:9mm;column-count:1!important}
+#cv-content [data-atelier-page-wrapper]{width:100%!important;max-width:none!important;min-width:0!important;height:auto!important;min-height:0!important;max-height:none!important;padding:0!important;margin:0!important;overflow:visible!important;box-shadow:none!important;column-count:1!important}
+#cv-content:has(>[data-atelier-page-wrapper]){column-count:1!important}
+#cv-content [data-atelier-columns]{column-gap:8mm;column-fill:balance}#cv-content [data-atelier-columns]>h1,#cv-content [data-atelier-columns]>h2{column-span:all}#cv-content [data-atelier-columns="2"]{break-inside:auto}#cv-content [data-atelier-columns="2"]>article{break-inside:avoid}#cv-content section{margin-bottom:${settings.gap}pt;break-inside:avoid}#cv-content section:last-child{margin-bottom:0}#cv-content h1,#cv-content h2,#cv-content h3{break-after:avoid}#cv-content p,#cv-content li{orphans:2;widows:2}#cv-content img{max-width:100%;height:auto}#cv-content a{cursor:text}#cv-content[data-editor-mode="layout"]{user-select:none;cursor:move}#cv-content[data-editor-mode="layout"] *{cursor:move!important}#cv-content [data-active-section]{outline:1px dashed #a5bb97;outline-offset:5px}
 @page{size:A4 portrait;margin:${settings.mt}mm ${settings.mr}mm ${settings.mb}mm ${settings.ml}mm}@media print{html,body{width:auto!important;height:auto!important;overflow:visible!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}#cv-page{width:auto!important;min-height:0!important;height:auto!important;padding:0!important;box-shadow:none!important}#cv-content{min-height:0!important}#cv-content [data-active-section]{outline:none!important}}`;
 }
 function setupHTML(content,styles='',attrs='') {
@@ -158,6 +167,7 @@ function styleText(property,value) {
 }
 function updateFormatting() {
   if(!root()||activeDrag)return;
+  updateBulletState();
   const target=targetForFormatting();
   const nodes=target.root?C.textNodes(target.root,target.range,target.bodyOnly):[];
   const sizes=new Set(),families=new Set();
@@ -173,6 +183,39 @@ function updateFormatting() {
   if(document.activeElement!==$('font'))$('font').value=key||'';
   $('format-context').textContent=target.label+(sizes.size>1?' · mixed sizes':'');
   $('size').title=sizes.size>1?'Mixed sizes — enter an exact size for this scope':`Font size in points · ${target.label}`;
+}
+function updateBulletState() {
+  const button=$('bullets');
+  const r=validRange(toolbarRange)?toolbarRange:validRange(range)?range:null;
+  button.disabled=mode!=='text'||!r;
+  let state='false';
+  if(r) {
+    const element=r.startContainer.nodeType===1?r.startContainer:r.startContainer.parentElement;
+    const nodes=r.collapsed?[element]:C.textNodes(root(),r).map(n=>n.parentElement);
+    const bulletFlags=nodes.map(n=>n.closest('li')?.parentElement?.tagName==='UL');
+    if(bulletFlags.length&&bulletFlags.every(Boolean))state='true';
+    else if(bulletFlags.some(Boolean))state='mixed';
+  }
+  button.setAttribute('aria-pressed',state);
+  button.classList.toggle('active',state==='true');
+  button.classList.toggle('mixed',state==='mixed');
+  button.title=state==='true'?'Remove bullets from the current paragraph or selection':'Add bullets to the current paragraph or selection';
+}
+function updateSectionColumns() {
+  const section=getBlocks()[selected];
+  const count=section ? Number(section.dataset.atelierColumns || parseInt(frame.contentWindow.getComputedStyle(section).columnCount,10)) || 1 : 0;
+  for(const [id,value] of [['single',1],['columns',2]]) {
+    const button=$(id);button.disabled=!section;button.classList.toggle('active',count===value);button.setAttribute('aria-pressed',String(count===value));
+  }
+  $('column-target').textContent=section?'Selected: '+labelFor(section,selected):'Click a section on the page to set its columns.';
+}
+function setSectionColumns(count) {
+  const section=getBlocks()[selected];
+  if(!section){toast('Select a section on the page first.');return;}
+  flush();section.dataset.atelierColumns=String(count);
+  section.style.setProperty('column-count',String(count),'important');
+  section.style.setProperty('column-width','auto','important');
+  changed();
 }
 function command(cmd,value) {
   if(mode!=='text'){toast('Switch to Text to format a passage.');return;}
@@ -205,7 +248,7 @@ function refresh() {
     item.ondrop=e=>{e.preventDefault();item.classList.remove('drag-over');if(dragIndex>=0)moveSection(dragIndex,i);dragIndex=-1;};item.ondragend=()=>dragIndex=-1;
     list.append(item);
   });
-  updatePositionInputs();measure();
+  updatePositionInputs();updateSectionColumns();measure();
 }
 function selectSection(i,scroll=false,focus=false) {
   if(!getBlocks()[i])return;selected=i;refresh();
@@ -293,7 +336,7 @@ function applySettings(record=true) {
   for(const id of ['mt','mb','ml','mr','line','gap'])$(id).value=settings[id];
   $('cjk').checked=settings.cjk;$('cjk-face').value=settings.cjkFace||'sc';
   $('line-value').textContent=Number(settings.line).toFixed(2).replace(/0$/,'');$('gap-value').textContent=settings.gap+' pt';
-  $('single').classList.toggle('active',settings.columns===1);$('columns').classList.toggle('active',settings.columns===2);
+  updateSectionColumns();
   doc().getElementById('atelier-page-style').textContent=pageCSS();if(record){dirty=true;snapshot();}measure();
 }
 function measure() {
@@ -365,7 +408,7 @@ async function importFile(file) {
       const v=JSON.parse(saved.content);
       for(const k of ['mt','mb','ml','mr'])settings[k]=Math.max(5,Math.min(45,Number(v[k])||settings[k]));
       settings.line=Math.max(1.1,Math.min(2,Number(v.line)||1.5));settings.gap=Math.max(4,Math.min(32,Number(v.gap)||18));
-      settings.columns=v.columns===2?2:1;settings.cjk=v.cjk!==false;settings.cjkFace=cjkNames[v.cjkFace]?v.cjkFace:'sc';
+      settings.cjk=v.cjk!==false;settings.cjkFace=cjkNames[v.cjkFace]?v.cjkFace:'sc';
       settings.font=['sans','tc','jp','kr','inter','source','plex','serif','system'].includes(v.font)?v.font:'sans';settings.size=Math.max(6,Math.min(72,Number(v.size)||11));
     }catch{}
     p.querySelectorAll('#atelier-page-style').forEach(el=>el.remove());
@@ -379,7 +422,7 @@ async function importFile(file) {
     const original=p.querySelector('#cv-content')||p.body,holder=p.createElement('div');
     for(const attr of ['style','class','dir','lang'])if(original.hasAttribute(attr))holder.setAttribute(attr,original.getAttribute(attr));
     const attrs=holder.outerHTML.match(/^<div(.*?)>/s)[1];
-    dirty=false;$('filename').value=file.name.replace(/\.html?$/i,'');load(original.innerHTML,styles,attrs);
+    dirty=false;$('document-kind').textContent='Local document';$('filename').value=file.name.replace(/\.html?$/i,'');load(original.innerHTML,styles,attrs);
     frame.addEventListener('load',()=>toast('Imported. Select Body text and enter 12 pt to normalize nested text styles.'),{once:true});
   } catch(error){console.error(error);toast('This HTML file could not be opened.');}
   finally{$('file').value='';}
@@ -470,7 +513,7 @@ for(const id of ['mt','mb','ml','mr','line','gap'])$(id).onchange=e=>{flush();se
 $('cjk').onchange=e=>{flush();settings.cjk=e.target.checked;applySettings();};
 $('cjk-face').onchange=e=>{flush();settings.cjkFace=e.target.value;for(const key of ['inter','source','plex']){for(const el of root().querySelectorAll('[style]')){const f=el.style.fontFamily;if(f&&f.replace(/["']/g,'').split(',')[0].trim()===family(key).replace(/["']/g,'').split(',')[0].trim())el.style.setProperty('font-family',family(key),'important');}}applySettings();updateFormatting();};
 $('balanced').onclick=()=>{flush();Object.assign(settings,{mt:18,mb:18,ml:20,mr:20});applySettings();};
-$('single').onclick=()=>{flush();settings.columns=1;applySettings();};$('columns').onclick=()=>{flush();settings.columns=2;applySettings();};
+$('single').onclick=()=>setSectionColumns(1);$('columns').onclick=()=>setSectionColumns(2);
 $('add').onclick=()=>{flush();const section=doc().createElement('section');section.innerHTML='<h2>New section</h2><p>Add your experience here.</p>';const blocks=getBlocks();(blocks[0]?.parentElement||root()).append(section);changed();selectSection(getBlocks().length-1,true,false);editSelected();};
 $('guide').onclick=()=>$('help').showModal();document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
 $('export').onclick=()=>$('print-dialog').showModal();$('print-now').onclick=printPDF;
