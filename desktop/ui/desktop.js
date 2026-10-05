@@ -21,7 +21,11 @@ function addFamily(name, group='Installed Windows fonts') {
 }
 async function refreshLocalFonts() {
   if(!window.queryLocalFonts)throw Error('Windows font access is unavailable in this build.');
-  const fonts=await window.queryLocalFonts();installedFaces.clear();individualFaces.clear();
+  const selected=$('font').value, fonts=await window.queryLocalFonts();
+  for(const group of [...$('font').querySelectorAll('optgroup')]){
+    if(group.label==='Installed Windows fonts'||group.label==='Individual Windows font faces')group.remove();
+  }
+  installedFaces.clear();individualFaces.clear();
   for(const face of fonts){const key=face.family.toLowerCase();if(!installedFaces.has(key))installedFaces.set(key,[]);installedFaces.get(key).push(face);}
   for(const family of [...new Set(fonts.map(f=>f.family))].sort((a,b)=>a.localeCompare(b)))addFamily(family);
   for(const face of [...fonts].sort((a,b)=>a.fullName.localeCompare(b.fullName))){
@@ -29,6 +33,8 @@ async function refreshLocalFonts() {
     addFamily(alias,'Individual Windows font faces');
     [...$('font').options].find(o=>o.value==='local:'+alias).textContent=face.fullName;
   }
+  for(const {family} of savedFaces.values())addFamily(family,'Fonts embedded in this project');
+  if([...$('font').options].some(o=>o.value===selected))$('font').value=selected;
   if(root()){doc().getElementById('atelier-system-faces')?.remove();doc().head.insertAdjacentHTML('beforeend',localWindowsStyles());}
   $('local-font-count').textContent=`${installedFaces.size} Windows font families`;
   $('replacement-font').replaceChildren(...[...$('font').options].filter(o=>o.value).map(o=>o.cloneNode(true)));
@@ -52,6 +58,9 @@ function usedFamilies() {
 }
 function readEmbeddedFonts() {
   savedFaces.clear();
+  for(const group of [...$('font').querySelectorAll('optgroup')]){
+    if(group.label==='Fonts embedded in this project')group.remove();
+  }
   for(const el of doc().querySelectorAll('style[data-atelier-local-family]')){
     if(!/data:[^,]+;base64,/.test(el.textContent))continue;
     const family=el.dataset.atelierLocalFamily, postscriptName=el.dataset.atelierPostscript||family;
@@ -119,10 +128,15 @@ async function applyOpened(result) {
   if(result.canceled)return;
   const project=result.project, html=project?.html||result.html;
   if(!html)return;
-  dirty=false;documentFonts=project?.fonts||[];
-  const loaded=new Promise(resolve=>frame.addEventListener('load',resolve,{once:true}));
-  await importFile({name:(project?.name||result.name||'Curriculum vitae')+'.html',size:new Blob([html]).size,text:async()=>html});
+  let resolveLoad;
+  const loaded=new Promise(resolve=>{resolveLoad=resolve;});
+  const onLoad=()=>resolveLoad();
+  frame.addEventListener('load',onLoad,{once:true});
+  const previousFonts=documentFonts;
+  try{await importFile({name:(project?.name||result.name||'Curriculum vitae')+'.html',size:new Blob([html]).size,text:async()=>html},{throwOnError:true,skipConfirmation:true});}
+  catch(error){frame.removeEventListener('load',onLoad);documentFonts=previousFonts;throw error;}
   await loaded;readEmbeddedFonts();
+  documentFonts=project?.fonts||[];
   $('filename').value=project?.name||result.name||'Curriculum vitae';
   $('document-kind').textContent=result.recovered?'Recovered CV':project?'Local project':'Imported HTML';
   $('filename').title=result.path||'';dirty=Boolean(result.recovered)||!project;

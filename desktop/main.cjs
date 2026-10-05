@@ -5,7 +5,7 @@ const path = require('node:path');
 const { randomUUID } = require('node:crypto');
 const { encodeProject, decodeProject, atomicWrite, MAX_BYTES } = require('./lib/project.cjs');
 const { importHTML } = require('./lib/import-html.cjs');
-const cheerio = require('cheerio');
+const { checkedHTML } = require('./lib/export-html.cjs');
 const ORIGIN = 'atelier://app';
 app.setName('CV Atelier');
 app.setAppUserModelId('com.cvatelier.desktop');
@@ -41,12 +41,6 @@ function handle(channel, action) {
     try { return await action(...args); }
     catch (error) { return { error: error.message }; }
   });
-}
-function checkedHTML(html) {
-  if (typeof html !== 'string' || Buffer.byteLength(html) > MAX_BYTES) throw Error('The document exceeds the 256 MB limit.');
-  const $ = cheerio.load(html);
-  $('script,iframe,object,embed,base,meta[http-equiv],form,input,button').remove();
-  return $.html();
 }
 async function writeRecovery(project) { await atomicWrite(recoveryFile, encodeProject(project)); return { ok: true }; }
 async function saveProject(project, saveAs) {

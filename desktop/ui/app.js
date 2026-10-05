@@ -208,7 +208,7 @@ function updateSectionColumns() {
   for(const [id,value] of [['single',1],['columns',2]]) {
     const button=$(id);button.disabled=!section;button.classList.toggle('active',count===value);button.setAttribute('aria-pressed',String(count===value));
   }
-  $('column-target').textContent=section?'Selected: '+labelFor(section,selected):'Click a section on the page to set its columns.';
+  $('column-target').textContent=section?'Editing: '+labelFor(section,selected):'Choose a section above or on the page to set its columns.';
 }
 function setSectionColumns(count) {
   const section=getBlocks()[selected];
@@ -239,7 +239,7 @@ function refresh() {
     const item=document.createElement('div');item.className='section-item'+(i===selected?' active':'');item.draggable=true;
     const handle=document.createElement('span');handle.className='handle';handle.textContent='⠿';handle.setAttribute('aria-hidden','true');item.append(handle);
     const button=document.createElement('button');button.className='section-name';button.textContent=labelFor(b,i);button.title=button.textContent;
-    button.onclick=()=>{setMode('layout');selectSection(i,true,true);};item.append(button);
+    button.onclick=()=>{selectSection(i,true,true);$('section-settings-heading').scrollIntoView({block:'nearest'});};item.append(button);
     for(const [direction,label] of [[-1,'↑'],[1,'↓']]){
       const m=document.createElement('button');m.className='move';m.textContent=label;m.disabled=i+direction<0||i+direction>=blocks.length;
       m.setAttribute('aria-label',`${direction<0?'Move up':'Move down'} ${button.textContent}`);m.onclick=()=>moveSection(i,i+direction);item.append(m);
@@ -399,11 +399,15 @@ function sanitize(html) {
   });
   return p;
 }
-async function importFile(file) {
+async function importFile(file,{throwOnError=false,skipConfirmation=false}={}) {
   if(!file)return;
   if(file.size>256*1024*1024){throw Error('The document exceeds the 256 MB limit.');}
-  if(!/\.html?$/i.test(file.name)){toast('Choose an .html or .htm document.');return;}
-  if(dirty&&!confirm('Import a new CV? Unsaved changes in this tab will be replaced. Save HTML first if you need them.'))return;
+  if(!/\.html?$/i.test(file.name)){
+    if(throwOnError)throw Error('Choose an .html or .htm document.');
+    toast('Choose an .html or .htm document.');return;
+  }
+  if(dirty&&!skipConfirmation&&!confirm('Import a new CV? Unsaved changes in this tab will be replaced. Save HTML first if you need them.'))return;
+  const previous={settings,dirty,filename:$('filename').value,documentKind:$('document-kind').textContent};
   try {
     const p=sanitize(await file.text());settings=defaults();
     const saved=p.querySelector('meta[name="atelier-settings"]');
@@ -427,7 +431,12 @@ async function importFile(file) {
     const attrs=holder.outerHTML.match(/^<div(.*?)>/s)[1];
     dirty=false;$('document-kind').textContent='Local document';$('filename').value=file.name.replace(/\.html?$/i,'');load(original.innerHTML,styles,attrs);
     frame.addEventListener('load',()=>toast('Imported. Select Body text and enter 12 pt to normalize nested text styles.'),{once:true});
-  } catch(error){console.error(error);toast('This HTML file could not be opened.');}
+  } catch(error){
+    settings=previous.settings;dirty=previous.dirty;
+    $('filename').value=previous.filename;$('document-kind').textContent=previous.documentKind;
+    console.error(error);toast('This HTML file could not be opened.');
+    if(throwOnError)throw error;
+  }
   finally{$('file').value='';}
 }
 function usedFontFiles() {

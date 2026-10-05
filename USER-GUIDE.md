@@ -21,6 +21,12 @@ The runtime, editor and bundled bilingual fonts are included. The app has no sig
 
 A recovery copy is saved every 30 seconds while the document has unsaved changes. On the next start after an unexpected exit, choose Recover CV to continue, then save it as a project. Closing normally prompts you to save or discard unsaved changes. Recovery keeps the latest unsaved document, not a document history.
 
+## Editing layout
+
+The left sidebar lists document sections. Select a section there or on the page, then use **Selected section** in the left sidebar to switch between one and two columns. Choose **Position sections** above the page to reveal that section's horizontal and vertical position controls. The left sidebar scrolls when its contents exceed the window height; the page preview and right sidebar scroll separately.
+
+The right sidebar contains page-wide settings: A4 paper, margins, typography, and page fit. Changes there affect the whole document. In the left sidebar, use the arrows beside a section to change its order. Drag a section in **Position sections** mode to adjust its location; double-click it to edit its text.
+
 ## Fonts and migration
 
 The font menu lists bundled fonts and installed Windows font families. Use **Font portability** to refresh the catalog, inspect missing fonts or replace a missing family. Bold and italic choose the relevant face within a family. Windows fonts can be used without copying them into the app.

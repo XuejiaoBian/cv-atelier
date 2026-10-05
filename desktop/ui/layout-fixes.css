@@ -1,0 +1,160 @@
+/* Give wrapping controls their real height before sizing the editor panes. */
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+header,
+.toolbar,
+.contextbar,
+footer,
+.desktop-footer {
+  flex: none;
+}
+
+.contextbar {
+  height: auto;
+  min-height: 44px;
+  flex-wrap: wrap;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+/* Keep each editor pane inside the space between the toolbars and footers. */
+.workspace {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+
+.outline,
+.properties {
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+#canvas {
+  min-height: 0;
+}
+
+.section-settings {
+  border-top: 1px solid #e1e6d9;
+  margin-top: 16px;
+  padding-top: 20px;
+  flex: none;
+}
+
+.section-settings .panel-heading {
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.section-settings #column-target {
+  margin: 14px 0 16px;
+  overflow-wrap: anywhere;
+}
+
+.section-settings .field-label,
+.section-settings label {
+  display: block;
+  color: #7b876e;
+  font-size: 12px;
+}
+
+.section-settings .field-label {
+  margin-bottom: 9px;
+}
+
+.section-settings .segmented {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.section-settings .segmented button {
+  min-height: 43px;
+  white-space: normal;
+  line-height: 1.25;
+}
+
+.section-settings h3 {
+  display: flex;
+  justify-content: space-between;
+  margin: 18px 0 15px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.section-settings .margin-grid {
+  gap: 0 8px;
+}
+
+.section-settings .margin-grid label {
+  margin: 0;
+}
+
+.section-settings .margin-grid input {
+  padding: 8px 6px;
+}
+
+.section-settings .toggle-label {
+  margin-top: 16px !important;
+}
+
+.section-settings .position-settings {
+  border-top: 1px solid #e1e6d9;
+  margin-top: 18px;
+}
+
+#guide {
+  display: block;
+  width: 100%;
+  margin-top: 18px;
+  padding: 10px 0;
+  text-align: left;
+}
+
+.properties .paper-option {
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) and (min-width: 701px) {
+  .workspace {
+    grid-template-columns: 180px minmax(260px, 1fr) 215px;
+  }
+
+  .outline {
+    display: flex;
+    padding: 22px 14px;
+  }
+
+  .properties {
+    padding: 22px 14px;
+  }
+}
+
+@media (max-width: 700px) {
+  body {
+    height: auto;
+    min-height: 100vh;
+    overflow: auto;
+  }
+
+  .workspace {
+    display: flex;
+    flex-direction: column;
+    flex: none;
+    height: auto;
+  }
+
+  .outline {
+    display: flex;
+    max-height: 420px;
+    border-right: 0;
+    border-bottom: 1px solid #dfe5d8;
+  }
+}
