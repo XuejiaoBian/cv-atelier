@@ -1,0 +1,70 @@
+{
+  "name": "cv-atelier-desktop",
+  "version": "1.0.0",
+  "description": "Offline bilingual CV editor for Windows",
+  "author": "CV Atelier",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.cjs",
+    "test:desktop": "electron . --smoke-test",
+    "pack": "electron-builder --win dir --x64",
+    "dist": "node build/package.cjs"
+  },
+  "dependencies": {
+    "cheerio": "1.2.0",
+    "postcss": "8.5.28",
+    "postcss-value-parser": "4.2.0"
+  },
+  "devDependencies": {
+    "7zip-bin": "5.2.0",
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.cvatelier.desktop",
+    "productName": "CV Atelier",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "desktop/**/*",
+      "package.json",
+      "build/icon.ico"
+    ],
+    "extraResources": [
+      {
+        "from": "dist/fonts",
+        "to": "fonts"
+      }
+    ],
+    "asar": true,
+    "afterPack": "build/after-pack.cjs",
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        "nsis",
+        "zip"
+      ],
+      "signAndEditExecutable": false,
+      "artifactName": "CV-Atelier-${version}-${arch}-setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "packElevateHelper": false
+    },
+    "fileAssociations": [
+      {
+        "ext": "cvatelier",
+        "name": "CV Atelier project",
+        "role": "Editor"
+      }
+    ]
+  }
+}

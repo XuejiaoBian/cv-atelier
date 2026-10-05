@@ -1,0 +1,18 @@
+'use strict';
+const { spawnSync } = require('node:child_process');
+const fs = require('node:fs');
+const path = require('node:path');
+const root=path.resolve(__dirname,'..');
+const args=[require.resolve('electron-builder/cli.js'),'--win','nsis','--x64'];
+const electronDist=path.join(root,'node_modules','electron','dist');
+if(fs.existsSync(path.join(electronDist,'electron.exe')))args.push('--config.electronDist='+electronDist);
+const result=spawnSync(process.execPath,args,{cwd:root,stdio:'inherit',env:{...process.env,CSC_IDENTITY_AUTO_DISCOVERY:'false'}});
+if(result.status!==0)process.exit(result.status||1);
+const unpacked=path.join(root,'release','win-unpacked');
+fs.writeFileSync(path.join(unpacked,'portable.json'),JSON.stringify({portable:true,version:1}));
+fs.copyFileSync(path.join(root,'USER-GUIDE.md'),path.join(unpacked,'READ-ME.md'));
+const zip=path.join(root,'release',`CV-Atelier-${require('../package.json').version}-x64-portable.zip`);
+if(fs.existsSync(zip))fs.unlinkSync(zip);
+const archive=spawnSync(require('7zip-bin').path7za,['a','-tzip',zip,'*','-r','-mx=5'],{cwd:unpacked,stdio:'inherit'});
+if(archive.status!==0)process.exit(archive.status||1);
+console.log('Installer and portable ZIP are ready in '+path.join(root,'release'));
